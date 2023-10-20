@@ -1,5 +1,17 @@
-import paramiko;
+import paramiko
+from configparser import ConfigParser
 
-command = "df"
+#Read config.ini file
+config_object = ConfigParser()
+config_object.read("config.ini")
 
-host = ""
+# Get server config
+serverconfig = config_object["SERVERCONFIG"]
+
+command = serverconfig["command"]
+host = serverconfig["host"]
+username = serverconfig["username"]
+password = serverconfig["password"]
+
+print("Server IP address = {}".format(host))
+print("Password = {}".format(password))
