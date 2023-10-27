@@ -1,5 +1,4 @@
 from configparser import ConfigParser
-import os.path
 import time
 import paramiko
 
@@ -13,22 +12,18 @@ serverconfig = config_object["SERVERCONFIG"]
 host = serverconfig["host"]
 username = serverconfig["username"]
 password = serverconfig["password"]
-sshKeyFilename = os.path.join(os.path.expanduser('~'), ".ssh", "id_ed25519")
+sshKeyFilename = serverconfig["sshKeyFilename"]
 sshKeyPassphrase = serverconfig["sshKeyPassphrase"]
 
 #print("Server IP address = {}".format(host))
 #print("Password = {}".format(password))
-
 clientSession = paramiko.SSHClient()
 clientSession.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 clientSession.connect(hostname=host,
-                      look_for_keys=True,
-                      username=username,
-                      password=password,
-                      key_filename=sshKeyFilename,
-                      passphrase=sshKeyPassphrase)
+                      username=username, 
+                      password=password)
 
-stdin, stdout, stderr = clientSession.exec_command('sudo cd /home/demond/.ssh')
+stdin, stdout, stderr = clientSession.exec_command('cd ~/.ssh')
 time.sleep(.5)
 print(stdout.read().decode())
 print(stderr.read().decode())
