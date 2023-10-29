@@ -20,17 +20,13 @@ sshKeyPassphrase = serverconfig["sshKeyPassphrase"]
 clientSession = paramiko.SSHClient()
 clientSession.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 clientSession.connect(hostname=host,
-                      username=username, 
+                      username=username,
                       password=password)
-
-stdin, stdout, stderr = clientSession.exec_command('cd ~/.ssh')
-time.sleep(.5)
-print(stdout.read().decode())
-print(stderr.read().decode())
 
 stdin, stdout, stderr = clientSession.exec_command('pwd')
 time.sleep(.5)
 print(stdout.read().decode())
 print(stderr.read().decode())
+
 
 clientSession.close()
