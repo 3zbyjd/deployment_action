@@ -11,7 +11,7 @@ serverconfig = config_object["SERVERCONFIG"]
 
 host = serverconfig["host"]
 username = serverconfig["username"]
-password = serverconfig["password"]
+sshPassword = serverconfig["password"]
 sshKeyFilename = serverconfig["sshKeyFilename"]
 sshKeyPassphrase = serverconfig["sshKeyPassphrase"]
 
@@ -19,13 +19,12 @@ sshKeyPassphrase = serverconfig["sshKeyPassphrase"]
 # print("Password = {}".format(password))
 clientSession = paramiko.SSHClient()
 clientSession.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename)
+sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
 clientSession.connect(hostname=host, username=username, pkey=sshpkey)
 
 stdin, stdout, stderr = clientSession.exec_command("pwd")
 time.sleep(0.5)
 print(stdout.read().decode())
 print(stderr.read().decode())
-
 
 clientSession.close()
