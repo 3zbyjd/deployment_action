@@ -15,8 +15,6 @@ sshPassword = serverconfig["password"]
 sshKeyFilename = serverconfig["sshKeyFilename"]
 sshKeyPassphrase = serverconfig["sshKeyPassphrase"]
 
-# print("Server IP address = {}".format(host))
-# print("Password = {}".format(password))
 clientSession = paramiko.SSHClient()
 clientSession.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
