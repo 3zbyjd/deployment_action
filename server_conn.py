@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 import time
+import os
 import paramiko
 import select
 
@@ -15,28 +16,57 @@ username = serverconfig["username"]
 sshPassword = serverconfig["password"]
 sshKeyFilename = serverconfig["sshKeyFilename"]
 sshKeyPassphrase = serverconfig["sshKeyPassphrase"]
+sftpRemoteDirectory = serverconfig["sftpRemoteDirectory"]
+sftpLocalDirectory = serverconfig["sftpLocalDirectory"]
 
-clientSession = paramiko.SSHClient()
-clientSession.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+sshClient = paramiko.SSHClient()
+sshClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
-clientSession.connect(hostname=host, username=username, pkey=sshpkey)
 
-commands = ["cd www/rlomuniv/", "pwd"]
+try:
+    # Establish ssh connection to remote server
+    print("Attempting to establish ssh connection")
+    sshClient.connect(hostname=host, username=username, pkey=sshpkey)
+    # sshClient.connect(hostname=host, username=username, password=sshPassword)
+    print("Connection successfully established with", host)
 
-for cmd in commands:
-    stdin, stdout, stderr = clientSession.exec_command(cmd)
+    # Established sftp connection
+    print("Transitioning to SFTP client")
+    sftpClient = sshClient.open_sftp()
+    print("Successfully transitioned to SFTP client")
 
-    while not stdout.channel.exit_status_ready():
-        if stdout.channel.recv_ready():
-            rl, wl, xl = select.select([stdout.channel], [], [], 0.0)
-            if len(rl) > 0:
-                tmp = stdout.channel.recv(1024)
-                output = tmp.decode()
-                print(output)
+    # Changing directory to target directory
+    sftpClient.chdir(sftpRemoteDirectory)
 
-    # time.sleep(1)
-    # stdout
-    # print(stdout.read().decode())
-    # print(stderr.read().decode())
+    # Print current working directory
+    print(sftpClient.getcwd())
 
-clientSession.close()
+    dirContentList = os.listdir(sftpLocalDirectory)
+
+    for contentItem in dirContentList:
+        if os.path.isfile(contentItem):
+            ftpClient.put(contentItem, sftpRemoteDirectory)
+        else:
+            sftpClient.mkdir(contentItem)
+
+except:
+    print("[!] Connection attempt failed")
+    exit()
+
+# commands = ["www/rlomuniv/", "pwd"]
+
+# commands = ["pwd", "id", "uname -a", "df -h"]
+
+# for cmd in commands:
+#     print("=" * 50, cmd, "=" * 50)
+
+#     stdin, stdout, stderr = clientSession.exec_command(cmd)
+
+#     print(stdout.read().decode())
+
+#     cmderror = stderr.read().decode()
+
+#     if cmderror:
+#         print(cmderror)
+
+sshClient.close()
