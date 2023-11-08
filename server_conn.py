@@ -42,16 +42,28 @@ try:
     print(sftpClient.getcwd())
 
     dirContentList = os.listdir(sftpLocalDirectory)
-
-    for contentItem in dirContentList:
-        if os.path.isfile(contentItem):
-            ftpClient.put(contentItem, sftpRemoteDirectory)
-        else:
-            sftpClient.mkdir(contentItem)
+    if len(dirContentList) > 0:
+        recurseContents(dirContentList)
 
 except:
     print("[!] Connection attempt failed")
     exit()
+
+
+def recurseContents(contentList):
+    for contentItem in contentList:
+        if os.path.isfile(contentItem):
+            ftpClient.put(contentItem, sftpRemoteDirectory)
+        else:
+            sftpClient.mkdir(contentItem)
+            sftpClient.chdir(contentItem)
+            subContentList = os.listdir(contentItem)
+            if len(subContentList) > 0:
+                recurseContents(subContentList)
+            sftpClient.chdir("../")
+
+    pass
+
 
 # commands = ["www/rlomuniv/", "pwd"]
 
