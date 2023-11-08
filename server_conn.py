@@ -23,6 +23,22 @@ sshClient = paramiko.SSHClient()
 sshClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
 
+
+def recurseContents(contentList):
+    for contentItem in contentList:
+        if os.path.isfile(contentItem):
+            sftpClient.put(contentItem, sftpRemoteDirectory)
+        else:
+            sftpClient.mkdir(contentItem)
+            sftpClient.chdir(contentItem)
+            subContentList = os.listdir(contentItem)
+            if len(subContentList) > 0:
+                recurseContents(subContentList)
+            sftpClient.chdir("../")
+
+    pass
+
+
 try:
     # Establish ssh connection to remote server
     print("Attempting to establish ssh connection")
@@ -48,21 +64,6 @@ try:
 except:
     print("[!] Connection attempt failed")
     exit()
-
-
-def recurseContents(contentList):
-    for contentItem in contentList:
-        if os.path.isfile(contentItem):
-            ftpClient.put(contentItem, sftpRemoteDirectory)
-        else:
-            sftpClient.mkdir(contentItem)
-            sftpClient.chdir(contentItem)
-            subContentList = os.listdir(contentItem)
-            if len(subContentList) > 0:
-                recurseContents(subContentList)
-            sftpClient.chdir("../")
-
-    pass
 
 
 # commands = ["www/rlomuniv/", "pwd"]
