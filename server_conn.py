@@ -25,13 +25,32 @@ sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase
 
 
 def recurseContents(contentList):
+    fileExistsTF = False
+
     for contentItem in contentList:
         if os.path.isfile(contentItem):
+            sftpClient.stat(contentItem)
             sftpClient.put(contentItem, sftpRemoteDirectory)
         else:
-            sftpClient.mkdir(contentItem)
-            sftpClient.chdir(contentItem)
-            subContentList = os.listdir(contentItem)
+            try:
+                sftpClient.stat(contentItem)
+            except IOError as e:
+                if "No such file" in str(e):
+                    fileExistsTF = False
+            else:
+                fileExistsTF = True
+
+            if not fileExistsTF:
+                sftpClient.mkdir(contentItem, 755)
+                sftpClient.chdir(contentItem)
+                # Print current working directory
+                print(sftpClient.getcwd())
+            else:
+                sftpClient.chdir(contentItem)
+                # Print current working directory
+                print(sftpClient.getcwd())
+
+            subContentList = os.listdir(sftpLocalDirectory + "\\" + contentItem)
             if len(subContentList) > 0:
                 recurseContents(subContentList)
             sftpClient.chdir("../")
