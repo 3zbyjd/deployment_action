@@ -27,6 +27,9 @@ sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase
 def recurseContents(contentList):
     fileExistsTF = False
 
+    parentDirectory = sftpLocalDirectory
+    workingDirectory = parentDirectory
+
     for contentItem in contentList:
         if os.path.isfile(contentItem):
             sftpClient.stat(contentItem)
@@ -83,22 +86,5 @@ try:
 except:
     print("[!] Connection attempt failed")
     exit()
-
-
-# commands = ["www/rlomuniv/", "pwd"]
-
-# commands = ["pwd", "id", "uname -a", "df -h"]
-
-# for cmd in commands:
-#     print("=" * 50, cmd, "=" * 50)
-
-#     stdin, stdout, stderr = clientSession.exec_command(cmd)
-
-#     print(stdout.read().decode())
-
-#     cmderror = stderr.read().decode()
-
-#     if cmderror:
-#         print(cmderror)
 
 sshClient.close()
