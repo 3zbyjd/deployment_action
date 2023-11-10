@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 import time
+import imghdr
 import os
 import paramiko
 import select
@@ -24,16 +25,49 @@ sshClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
 
 
-def recurseContents(contentList):
+def recurseContents(contentDir, contentList):
     fileExistsTF = False
 
-    parentDirectory = sftpLocalDirectory
+    parentDirectory = contentDir
     workingDirectory = parentDirectory
 
     for contentItem in contentList:
-        if os.path.isfile(contentItem):
-            sftpClient.stat(contentItem)
-            sftpClient.put(contentItem, sftpRemoteDirectory)
+        """if os.path.isfile(contentItem):
+        sftpClient.put(contentItem, sftpRemoteDirectory)"""
+        splitItems = contentItem.split(".")
+        if len(splitItems) == 2:
+            if splitItems[1] in (
+                "gif",
+                "jpeg",
+                "jpg",
+                "png",
+                "js",
+                "html",
+                "htm",
+                "json",
+                "exe",
+                "pdb",
+                "dll",
+                "pdf",
+            ):
+                sftpClient.put(contentItem, sftpRemoteDirectory)
+        elif len(splitItems) == 3:
+            if splitItems[2] in (
+                "gif",
+                "jpeg",
+                "jpg",
+                "png",
+                "js",
+                "html",
+                "htm",
+                "json",
+                "exe",
+                "pdb",
+                "dll",
+                "pdf",
+            ):
+                sftpClient.put(contentItem, sftpRemoteDirectory)
+
         else:
             try:
                 sftpClient.stat(contentItem)
@@ -45,6 +79,7 @@ def recurseContents(contentList):
 
             if not fileExistsTF:
                 sftpClient.mkdir(contentItem, 755)
+                sftpClient.chown(contentItem, 1000, 1000)
                 sftpClient.chdir(contentItem)
                 # Print current working directory
                 print(sftpClient.getcwd())
@@ -53,9 +88,10 @@ def recurseContents(contentList):
                 # Print current working directory
                 print(sftpClient.getcwd())
 
-            subContentList = os.listdir(sftpLocalDirectory + "\\" + contentItem)
+            workingDirectory = os.path.join(workingDirectory, contentItem)
+            subContentList = os.listdir(workingDirectory)
             if len(subContentList) > 0:
-                recurseContents(subContentList)
+                recurseContents(workingDirectory, subContentList)
             sftpClient.chdir("../")
 
     pass
@@ -81,7 +117,7 @@ try:
 
     dirContentList = os.listdir(sftpLocalDirectory)
     if len(dirContentList) > 0:
-        recurseContents(dirContentList)
+        recurseContents(sftpLocalDirectory, dirContentList)
 
 except:
     print("[!] Connection attempt failed")
