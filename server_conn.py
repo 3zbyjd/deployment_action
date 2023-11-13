@@ -43,24 +43,37 @@ try:
     print(sftpClient.getcwd())
 
     for rootPath, dirs, fileItem in os.walk(sftpLocalDirectory):
-        for f in fileItem:
-            if f in (
-                "gif",
-                "jpeg",
-                "jpg",
-                "png",
-                "js",
-                "html",
-                "htm",
-                "json",
-                "exe",
-                "pdb",
-                "dll",
-                "pdf",
-            ):
-                print(f)
+        if len(rootPath) > 56:
+            dirPath = rootPath[56:].replace("\\", "/")
+            remoteDirPath = sftpRemoteDirectory + dirPath
+        else:
+            remoteDirPath = sftpRemoteDirectory
 
-except:
+        try:
+            sftpClient.stat(dirs[0])
+        except IOError as e:
+            if "No such file" in str(e):
+                fileExistsTF = False
+        else:
+            fileExistsTF = True
+
+        # if not fileExistsTF:
+        #     sftpClient.mkdir(dirs, 755)
+        #     sftpClient.chown(dirs, 1000, 1000)
+        #     sftpClient.chdir(dirs)
+        #     # Print current working directory
+        #     print(sftpClient.getcwd())
+        # else:
+        #     sftpClient.chdir(fileItem)
+        #     # Print current working directory
+        #     print(sftpClient.getcwd())
+
+        print(rootPath)
+        print(remoteDirPath)
+        print(dirs)
+        print(fileItem)
+
+except IOError as e:
     print("[!] Connection attempt failed")
     exit()
 
