@@ -22,7 +22,8 @@ sftpLocalDirectory = serverconfig["sftpLocalDirectory"]
 
 sshClient = paramiko.SSHClient()
 sshClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
+#sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
+sshpkey = paramiko.Ed25519Key.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
 
 try:
     # Establish ssh connection to remote server
@@ -50,7 +51,12 @@ try:
             remoteDirPath = sftpRemoteDirectory
 
         try:
-            sftpClient.stat(dirs[0])
+            currentDir = dirs[0]
+        except IndexError as e:
+            print("No more directories to traverse")
+
+        try:
+            sftpClient.stat(currentDir)
         except IOError as e:
             if "No such file" in str(e):
                 fileExistsTF = False
@@ -68,7 +74,7 @@ try:
         #     # Print current working directory
         #     print(sftpClient.getcwd())
 
-        print(rootPath)
+        #print(rootPath)
         print(remoteDirPath)
         print(dirs)
         print(fileItem)
