@@ -81,11 +81,13 @@ try:
         # print(dirs)
 
         for thisFile in fileItem:
-            sftpClient.put(thisFile, currentDir)
+            localFilePath = rootPath + "\\" + thisFile
+            remoteFilePath = currentDir + "/" + thisFile
+            sftpClient.put(localFilePath, remoteFilePath)
             print("File {} has been uploaded to remote {}".format(thisFile, currentDir))
             # print(fileItem)
 
-except IOError as e:
+except Exception as e:
     print("[!] Connection attempt failed")
     exit()
 
