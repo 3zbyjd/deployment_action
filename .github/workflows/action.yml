@@ -1,0 +1,21 @@
+name: Python Deployment Action
+
+on:
+  push:
+    branches:
+      - "master"
+  pull_request:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout actions
+      - uses: actions/checkout@v4
+
+      - name: Run python deployment script
+        env:
+          HOST: "Host passed in from action"
+        run: python server_conn_test.py
