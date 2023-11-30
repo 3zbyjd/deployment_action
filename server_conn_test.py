@@ -7,7 +7,7 @@ def main():
 
     if not token:
         raise RuntimeError("HOST env var is not set!")
-    print("Host = " + host)
+    print("Host = ", host)
 
     if __name__ == "__main__":
         main()
