@@ -18,5 +18,5 @@ jobs:
 
       - name: Run python deployment script
         env:
-          HOST: "192.168.1.1"
+          HOST: ${{secrets.HOST}}
         run: python server_conn_test.py
