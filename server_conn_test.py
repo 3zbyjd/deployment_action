@@ -5,7 +5,7 @@ def main():
     print("Hello from GitHub Actions!")
     host = os.environ.get("HOST")
 
-    if not token:
+    if not host:
         raise RuntimeError("HOST env var is not set!")
     print("Host = ", host)
 
