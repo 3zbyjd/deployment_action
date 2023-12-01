@@ -8,104 +8,116 @@ import select
 
 
 def main():
-    print("Begin python script")
+    print("Hello from GitHub Actions!")
+    host = os.environ.get("HOST")
 
-    # Read config.ini file
-    config_object = ConfigParser()
-    config_object.read("config.ini")
+    if not host:
+        raise RuntimeError("HOST env var is not set!")
+    print("Host = ", host)
 
-    # Get server config
-    serverconfig = config_object["SERVERCONFIG"]
 
-    host = serverconfig["host"]
-    username = serverconfig["username"]
-    sshPassword = serverconfig["password"]
-    sshKeyFilename = serverconfig["sshKeyFilename"]
-    sshKeyPassphrase = serverconfig["sshKeyPassphrase"]
-    sftpRemoteDirectory = serverconfig["sftpRemoteDirectory"]
-    sftpLocalDirectory = serverconfig["sftpLocalDirectory"]
+if __name__ == "__main__":
+    main()
 
-    sshClient = paramiko.SSHClient()
-    sshClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
-    # sshpkey = paramiko.Ed25519Key.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
+# def main():
+#     print("Begin python script")
 
-    try:
-        # Establish ssh connection to remote server
-        print("Attempting to establish ssh connection")
-        sshClient.connect(hostname=host, username=username, pkey=sshpkey)
-        # sshClient.connect(hostname=host, username=username, password=sshPassword)
-        print("Connection successfully established with", host)
+#     # Read config.ini file
+#     config_object = ConfigParser()
+#     config_object.read("config.ini")
 
-        # Established sftp connection
-        print("Transitioning to SFTP client")
-        sftpClient = sshClient.open_sftp()
-        print("Successfully transitioned to SFTP client")
+#     # Get server config
+#     serverconfig = config_object["SERVERCONFIG"]
 
-        # Changing directory to target directory
-        sftpClient.chdir(sftpRemoteDirectory)
+#     host = serverconfig["host"]
+#     username = serverconfig["username"]
+#     sshPassword = serverconfig["password"]
+#     sshKeyFilename = serverconfig["sshKeyFilename"]
+#     sshKeyPassphrase = serverconfig["sshKeyPassphrase"]
+#     sftpRemoteDirectory = serverconfig["sftpRemoteDirectory"]
+#     sftpLocalDirectory = serverconfig["sftpLocalDirectory"]
 
-        # Print current working directory
-        print("Default working directory is {}".format(sftpClient.getcwd()))
+#     sshClient = paramiko.SSHClient()
+#     sshClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#     sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
+#     # sshpkey = paramiko.Ed25519Key.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
 
-        for rootPath, dirs, fileItem in os.walk(sftpLocalDirectory):
-            if len(rootPath) > 56:
-                dirPath = rootPath[56:].replace("\\", "/")
-                remoteDirPath = sftpRemoteDirectory + dirPath
-            else:
-                remoteDirPath = sftpRemoteDirectory
+#     try:
+#         # Establish ssh connection to remote server
+#         print("Attempting to establish ssh connection")
+#         sshClient.connect(hostname=host, username=username, pkey=sshpkey)
+#         # sshClient.connect(hostname=host, username=username, password=sshPassword)
+#         print("Connection successfully established with", host)
 
-            try:
-                # currentDir = dirs[0]
-                currentDir = remoteDirPath
-            except IndexError as e:
-                print("No more directories to traverse")
+#         # Established sftp connection
+#         print("Transitioning to SFTP client")
+#         sftpClient = sshClient.open_sftp()
+#         print("Successfully transitioned to SFTP client")
 
-            try:
-                sftpClient.stat(currentDir)
-            except IOError as e:
-                if "No such file" in str(e):
-                    fileExistsTF = False
-            else:
-                fileExistsTF = True
+#         # Changing directory to target directory
+#         sftpClient.chdir(sftpRemoteDirectory)
 
-            if not fileExistsTF:
-                sftpClient.mkdir(currentDir, 755)
-                sftpClient.chown(currentDir, 1000, 1000)
-                sftpClient.chdir(currentDir)
-                # Print current working directory
-                print(
-                    "Transitioned to {} as working directory".format(
-                        sftpClient.getcwd()
-                    )
-                )
-            else:
-                sftpClient.chdir(currentDir)
-                print(
-                    "Transitioned to {} as working directory".format(
-                        sftpClient.getcwd()
-                    )
-                )
-                # Print current working directory
-                # print(sftpClient.getcwd())
+#         # Print current working directory
+#         print("Default working directory is {}".format(sftpClient.getcwd()))
 
-            # print(rootPath)
-            # print(currentDir)
-            # print(dirs)
+#         for rootPath, dirs, fileItem in os.walk(sftpLocalDirectory):
+#             if len(rootPath) > 56:
+#                 dirPath = rootPath[56:].replace("\\", "/")
+#                 remoteDirPath = sftpRemoteDirectory + dirPath
+#             else:
+#                 remoteDirPath = sftpRemoteDirectory
 
-            for thisFile in fileItem:
-                localFilePath = rootPath + "\\" + thisFile
-                remoteFilePath = currentDir + "/" + thisFile
-                sftpClient.put(localFilePath, remoteFilePath)
-                print(
-                    "File {} has been uploaded to remote {}".format(
-                        thisFile, currentDir
-                    )
-                )
-                # print(fileItem)
+#             try:
+#                 # currentDir = dirs[0]
+#                 currentDir = remoteDirPath
+#             except IndexError as e:
+#                 print("No more directories to traverse")
 
-    except Exception as e:
-        print("[!] Connection attempt failed")
-        exit()
+#             try:
+#                 sftpClient.stat(currentDir)
+#             except IOError as e:
+#                 if "No such file" in str(e):
+#                     fileExistsTF = False
+#             else:
+#                 fileExistsTF = True
 
-    sshClient.close()
+#             if not fileExistsTF:
+#                 sftpClient.mkdir(currentDir, 755)
+#                 sftpClient.chown(currentDir, 1000, 1000)
+#                 sftpClient.chdir(currentDir)
+#                 # Print current working directory
+#                 print(
+#                     "Transitioned to {} as working directory".format(
+#                         sftpClient.getcwd()
+#                     )
+#                 )
+#             else:
+#                 sftpClient.chdir(currentDir)
+#                 print(
+#                     "Transitioned to {} as working directory".format(
+#                         sftpClient.getcwd()
+#                     )
+#                 )
+#                 # Print current working directory
+#                 # print(sftpClient.getcwd())
+
+#             # print(rootPath)
+#             # print(currentDir)
+#             # print(dirs)
+
+#             for thisFile in fileItem:
+#                 localFilePath = rootPath + "\\" + thisFile
+#                 remoteFilePath = currentDir + "/" + thisFile
+#                 sftpClient.put(localFilePath, remoteFilePath)
+#                 print(
+#                     "File {} has been uploaded to remote {}".format(
+#                         thisFile, currentDir
+#                     )
+#                 )
+#                 # print(fileItem)
+
+#     except Exception as e:
+#         print("[!] Connection attempt failed")
+#         exit()
+
+#     sshClient.close()
