@@ -26,4 +26,5 @@ jobs:
         env:
           HOST: ${{secrets.HOST}}
 
-        run: python .github/workflows/server_conn_test.py
+        run: python server_conn.py
+        # run: python .github/workflows/server_conn_test.py
