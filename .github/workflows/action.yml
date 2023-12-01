@@ -17,9 +17,6 @@ jobs:
       - name: Setup Actions
       - uses: actions/checkout@v4
 
-      - name: Setup Python
-      - uses: actions/python@v4
-
       - name: Run python deployment script
         env:
           HOST: ${{secrets.HOST}}
