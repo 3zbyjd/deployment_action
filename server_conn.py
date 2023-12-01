@@ -1,6 +1,7 @@
 from configparser import ConfigParser
-import time
-import imghdr
+
+# import time
+# import imghdr
 import os
 import paramiko
 import select
