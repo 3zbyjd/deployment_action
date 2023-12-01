@@ -17,6 +17,19 @@ def main():
     # Get server config
     serverconfig = config_object["SERVERCONFIG"]
 
+    host = serverconfig["host"]
+    username = serverconfig["username"]
+    sshPassword = serverconfig["password"]
+    sshKeyFilename = serverconfig["sshKeyFilename"]
+    sshKeyPassphrase = serverconfig["sshKeyPassphrase"]
+    sftpRemoteDirectory = serverconfig["sftpRemoteDirectory"]
+    sftpLocalDirectory = serverconfig["sftpLocalDirectory"]
+
+    sshClient = paramiko.SSHClient()
+    sshClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    sshpkey = paramiko.RSAKey.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
+    # sshpkey = paramiko.Ed25519Key.from_private_key_file(sshKeyFilename, sshKeyPassphrase)
+
 
 if __name__ == "__main__":
     main()
