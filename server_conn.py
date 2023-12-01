@@ -8,12 +8,14 @@ import select
 
 
 def main():
-    print("Hello from GitHub Actions!")
-    host = os.environ.get("HOST")
+    print("Begin python script")
 
-    if not host:
-        raise RuntimeError("HOST env var is not set!")
-    print("Host = ", host)
+    # Read config.ini file
+    config_object = ConfigParser()
+    config_object.read("config.ini")
+
+    # Get server config
+    serverconfig = config_object["SERVERCONFIG"]
 
 
 if __name__ == "__main__":
