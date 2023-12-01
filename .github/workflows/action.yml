@@ -25,4 +25,5 @@ jobs:
       - name: Run python deployment script
         env:
           HOST: ${{secrets.HOST}}
+
         run: python .github/workflows/server_conn_test.py

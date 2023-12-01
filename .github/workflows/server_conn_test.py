@@ -1,5 +1,7 @@
 import os
 
+print("Enter here")
+
 
 def main():
     print("Hello from GitHub Actions!")
