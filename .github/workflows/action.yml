@@ -31,6 +31,9 @@ jobs:
         env:
           HOST: ${{ secrets.RLOM_REMOTE_HOST }}
           USERNAME: ${{ secrets.RLOM_USER_NAME }}
+          PASSWORD: ${{ secrets.RLOM_PASSWORD }}
+          PASSPHRASE: ${{ secrets.RLOM_PASSPHRASE }}
+          PRIVATEKEY: ${{ secrets.RLOM_REMOTE_PK }}
 
         # run: python server_conn.py
         run: python .github/workflows/server_conn_test.py
