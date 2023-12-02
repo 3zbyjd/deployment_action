@@ -29,7 +29,7 @@ jobs:
 
       - name: Run python deployment script
         env:
-          HOST: ${{secrets.HOST}}
+          HOST: ${{ secrets.RLOM_REMOTE_HOST }}
 
         run: python server_conn.py
         # run: python .github/workflows/server_conn_test.py
