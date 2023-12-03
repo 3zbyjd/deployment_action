@@ -1,10 +1,17 @@
 import os
+import paramiko
+import select
 
 
 def main():
-    print("Hello from GitHub Actions!")
+    print("Begin python script")
 
     host = os.environ.get("HOST")
+    username = os.environ.get("USERNAME")
+    password = os.environ.get("PASSWORD")
+    passphrase = os.environ.get("PASSPHRASE")
+    privatekey = os.environ.get("PRIVATEKEY")
+    sftpRemoteDirectory = os.environ.get("REMOTEPATH")
 
 if __name__ == "__main__":
     main()

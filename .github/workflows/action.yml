@@ -34,6 +34,7 @@ jobs:
           PASSWORD: ${{ secrets.RLOM_PASSWORD }}
           PASSPHRASE: ${{ secrets.RLOM_PASSPHRASE }}
           PRIVATEKEY: ${{ secrets.RLOM_REMOTE_PK }}
+          REMOTEPATH: ${{ secrets.RLOM_REMOTE_PATH }}
 
         # run: python server_conn.py
         run: python .github/workflows/server_conn_test.py
