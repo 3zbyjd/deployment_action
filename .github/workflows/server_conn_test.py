@@ -12,6 +12,8 @@ def main():
     passphrase = os.environ.get("PASSPHRASE")
     privatekey = os.environ.get("PRIVATEKEY")
     sftpRemoteDirectory = os.environ.get("REMOTEPATH")
+    jobToken = os.environ.get("JOBTOKEN")
+
 
 if __name__ == "__main__":
     main()
