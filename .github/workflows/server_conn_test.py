@@ -1,6 +1,7 @@
 import os
 import paramiko
 import select
+import requests
 
 
 def main():
@@ -13,6 +14,11 @@ def main():
     privatekey = os.environ.get("PRIVATEKEY")
     sftpRemoteDirectory = os.environ.get("REMOTEPATH")
     jobToken = os.environ.get("JOBTOKEN")
+
+    apiUrl = f"https://api.github.com/repos/3zbyjd/rlomuniv/actions/artifacts/rlomuniv"
+    artifactData = requests.get(apiUrl).json()
+
+    print(artifactData)
 
 
 if __name__ == "__main__":
