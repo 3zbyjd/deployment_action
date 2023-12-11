@@ -15,7 +15,7 @@ def main():
     sftpRemoteDirectory = os.environ.get("REMOTEPATH")
     jobToken = os.environ.get("JOBTOKEN")
 
-    apiUrl = f"https://api.github.com/repos/3zbyjd/rlomuniv/actions/artifacts/rlomuniv"
+    apiUrl = f"https://api.github.com/repos/3zbyjd/rlomuniv/actions/artifacts"
     artifactData = requests.get(apiUrl).json()
 
     print(artifactData)
