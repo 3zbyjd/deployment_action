@@ -7,18 +7,18 @@ import requests
 def main():
     print("Begin python script")
 
-    host = os.environ.get("HOST")
-    username = os.environ.get("USERNAME")
-    password = os.environ.get("PASSWORD")
-    passphrase = os.environ.get("PASSPHRASE")
-    privatekey = os.environ.get("PRIVATEKEY")
-    sftpRemoteDirectory = os.environ.get("REMOTEPATH")
-    jobToken = os.environ.get("JOBTOKEN")
+    # host = os.environ.get("HOST")
+    # username = os.environ.get("USERNAME")
+    # password = os.environ.get("PASSWORD")
+    # passphrase = os.environ.get("PASSPHRASE")
+    # privatekey = os.environ.get("PRIVATEKEY")
+    # sftpRemoteDirectory = os.environ.get("REMOTEPATH")
+    # jobToken = os.environ.get("JOBTOKEN")
 
-    apiUrl = f"https://api.github.com/repos/3zbyjd/rlomuniv/actions/artifacts"
-    artifactData = requests.get(apiUrl).json()
+    # apiUrl = f"https://api.github.com/repos/3zbyjd/rlomuniv/actions/artifacts"
+    # artifactData = requests.get(apiUrl).json()
 
-    print(artifactData)
+    # print(artifactData)
 
 
 if __name__ == "__main__":
