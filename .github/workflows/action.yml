@@ -39,4 +39,5 @@ jobs:
         #   JOBTOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         # run: python server_conn.py
-        run: python .github/workflows/server_conn_test.py
+        # run: python .github/workflows/server_conn_test.py
+        run: python 3zbyjd/deployment_action/.github/workflows/server_conn_test.py
