@@ -29,7 +29,7 @@ jobs:
           pip install paramiko --ignore-installed
 
       - name: Run python deployment script
-        run: python 3zbyjd/deployment_action/.github/workflows/server_conn_test.py
+        run: python .github/workflows/server_conn_test.py
         # env:
         #   HOST: ${{ secrets.RLOM_REMOTE_HOST }}
         #   USERNAME: ${{ secrets.RLOM_USER_NAME }}
