@@ -12,6 +12,7 @@ on:
 
 jobs:
   build:
+    using: "composite"
     runs-on: ubuntu-latest
     steps:
       # Checkout and Setup actions
