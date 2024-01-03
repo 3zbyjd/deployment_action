@@ -11,8 +11,8 @@ on:
   workflow_call:
 
 jobs:
+  using: "composite"
   build:
-    using: "composite"
     runs-on: ubuntu-latest
     steps:
       # Checkout and Setup actions
